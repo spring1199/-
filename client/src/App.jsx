@@ -158,32 +158,34 @@ export default function App() {
         </form>
       </details>
 
-      <table width="100%" border="1" cellPadding="6" style={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th>Дугаар</th><th>Нэр</th><th>Төрсөн он</th><th>Зүс</th><th>Эзэмшигч</th>
-            <th>Угшил</th><th>Тамга</th><th>Эцэг</th><th>Эх</th><th>Сүрэг</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {horses.map(h => (
-            <tr key={h._id}>
-              <td>{h.horseId}</td>
-              <td>{h.name}</td>
-              <td>{h.birthYear}</td>
-              <td>{h.color}</td>
-              <td>{h.owner}</td>
-              <td>{h.lineage}</td>
-              <td>{h.brandMark}</td>
-              <td>{h.sire ? (h.sire.horseId + (h.sire.name ? ` (${h.sire.name})` : "")) : "-"}</td>
-              <td>{h.dam ? (h.dam.horseId + (h.dam.name ? ` (${h.dam.name})` : "")) : "-"}</td>
-              <td>{h.herd ? (h.herd.name) : "-"}</td>
-              <td><button onClick={()=>removeHorse(h._id)}>Устгах</button></td>
+      <div className="table-card">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Дугаар</th><th>Нэр</th><th>Төрсөн он</th><th>Зүс</th><th>Эзэмшигч</th>
+              <th>Угшил</th><th>Тамга</th><th>Эцэг</th><th>Эх</th><th>Сүрэг</th><th></th>
             </tr>
-          ))}
-          {horses.length === 0 && <tr><td colSpan="11" style={{ textAlign:"center" }}>Мэдээлэл алга</td></tr>}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {horses.map(h => (
+              <tr key={h._id}>
+                <td>{h.horseId}</td>
+                <td>{h.name}</td>
+                <td>{h.birthYear}</td>
+                <td>{h.color}</td>
+                <td>{h.owner}</td>
+                <td>{h.lineage}</td>
+                <td>{h.brandMark}</td>
+                <td>{h.sire ? (h.sire.horseId + (h.sire.name ? ` (${h.sire.name})` : "")) : "-"}</td>
+                <td>{h.dam ? (h.dam.horseId + (h.dam.name ? ` (${h.dam.name})` : "")) : "-"}</td>
+                <td>{h.herd ? (h.herd.name) : "-"}</td>
+                <td className="table-actions"><button onClick={()=>removeHorse(h._id)}>Устгах</button></td>
+              </tr>
+            ))}
+            {horses.length === 0 && <tr><td colSpan="11" style={{ textAlign:"center" }}>Мэдээлэл алга</td></tr>}
+          </tbody>
+        </table>
+      </div>
 
       <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
         <button disabled={page<=1} onClick={()=>loadHorses(page-1, q)}>Өмнөх</button>
@@ -230,27 +232,29 @@ export default function App() {
                 <button type="submit">Хайх</button>
               </form>
 
-              <table width="100%" border="1" cellPadding="6" style={{ borderCollapse: "collapse" }}>
-                <thead>
-                  <tr>
-                    <th>Дугаар</th><th>Нэр</th><th>Төрсөн он</th><th>Зүс</th><th>Эзэмшигч</th><th>Эцэг</th><th>Эх</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {herdHorses.map(h => (
-                    <tr key={h._id}>
-                      <td>{h.horseId}</td>
-                      <td>{h.name}</td>
-                      <td>{h.birthYear}</td>
-                      <td>{h.color}</td>
-                      <td>{h.owner}</td>
-                      <td>{h.sire ? (h.sire.horseId + (h.sire.name ? ` (${h.sire.name})` : "")) : "-"}</td>
-                      <td>{h.dam ? (h.dam.horseId + (h.dam.name ? ` (${h.dam.name})` : "")) : "-"}</td>
+              <div className="table-card">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Дугаар</th><th>Нэр</th><th>Төрсөн он</th><th>Зүс</th><th>Эзэмшигч</th><th>Эцэг</th><th>Эх</th>
                     </tr>
-                  ))}
-                  {herdHorses.length === 0 && <tr><td colSpan="7" style={{ textAlign:"center" }}>Мэдээлэл алга</td></tr>}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {herdHorses.map(h => (
+                      <tr key={h._id}>
+                        <td>{h.horseId}</td>
+                        <td>{h.name}</td>
+                        <td>{h.birthYear}</td>
+                        <td>{h.color}</td>
+                        <td>{h.owner}</td>
+                        <td>{h.sire ? (h.sire.horseId + (h.sire.name ? ` (${h.sire.name})` : "")) : "-"}</td>
+                        <td>{h.dam ? (h.dam.horseId + (h.dam.name ? ` (${h.dam.name})` : "")) : "-"}</td>
+                      </tr>
+                    ))}
+                    {herdHorses.length === 0 && <tr><td colSpan="7" style={{ textAlign:"center" }}>Мэдээлэл алга</td></tr>}
+                  </tbody>
+                </table>
+              </div>
 
               <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
                 <button disabled={herdPage<=1} onClick={()=>loadHerdHorses(activeHerd, herdPage-1, herdSearch)}>Өмнөх</button>
