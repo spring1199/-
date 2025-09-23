@@ -113,22 +113,22 @@ export default function App() {
   const stallionOptions = horseOptions;
 
   return (
-    <div style={{ maxWidth: 1100, margin: "20px auto", padding: 16 }}>
+    <div className="app-shell">
       <h1>Адууны бүртгэлийн апп</h1>
 
-      <form onSubmit={searchAll} style={{ margin: "12px 0", display: "flex", gap: 8 }}>
+      <form onSubmit={searchAll} className="search-form primary-search">
         <input
+          className="input-grow"
           value={q}
           onChange={e=>setQ(e.target.value)}
           placeholder="Хайх: дугаар, нэр, эзэмшигч, зүс, угшил, тамга, СҮРГИЙН НЭР..."
-          style={{ flex: 1 }}
         />
         <button type="submit">Хайх</button>
       </form>
 
-      <details open style={{ marginBottom: 16 }}>
+      <details open className="section-card">
         <summary><b>Шинэ адуу нэмэх</b></summary>
-        <form onSubmit={createHorse} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
+        <form onSubmit={createHorse} className="form-grid">
           <input required placeholder="Адууны дугаар (давтагдашгүй)" value={form.horseId} onChange={e=>setForm(f=>({...f, horseId:e.target.value}))}/>
           <input placeholder="Нэр" value={form.name} onChange={e=>setForm(f=>({...f, name:e.target.value}))}/>
           <input placeholder="Төрсөн он" type="number" value={form.birthYear} onChange={e=>setForm(f=>({...f, birthYear:e.target.value}))}/>
@@ -151,14 +151,14 @@ export default function App() {
             {herdOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
 
-          <div style={{ gridColumn: "1 / -1", display: "flex", gap: 8 }}>
+          <div className="form-actions">
             <button type="submit">Нэмэх</button>
             <button type="button" onClick={resetForm}>Цэвэрлэх</button>
           </div>
         </form>
       </details>
 
-      <table width="100%" border="1" cellPadding="6" style={{ borderCollapse: "collapse" }}>
+      <table className="data-table">
         <thead>
           <tr>
             <th>Дугаар</th><th>Нэр</th><th>Төрсөн он</th><th>Зүс</th><th>Эзэмшигч</th>
@@ -181,22 +181,22 @@ export default function App() {
               <td><button onClick={()=>removeHorse(h._id)}>Устгах</button></td>
             </tr>
           ))}
-          {horses.length === 0 && <tr><td colSpan="11" style={{ textAlign:"center" }}>Мэдээлэл алга</td></tr>}
+          {horses.length === 0 && <tr><td colSpan="11" className="empty-cell">Мэдээлэл алга</td></tr>}
         </tbody>
       </table>
 
-      <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
+      <div className="pagination">
         <button disabled={page<=1} onClick={()=>loadHorses(page-1, q)}>Өмнөх</button>
         <span>{page} / {pages}</span>
         <button disabled={page>=pages} onClick={()=>loadHorses(page+1, q)}>Дараах</button>
       </div>
 
-      <hr style={{ margin: "20px 0" }}/>
+      <hr className="section-divider" />
       <h2>Сүрэг</h2>
 
-      <details open>
+      <details open className="section-card">
         <summary><b>Сүрэг үүсгэх</b> (азаргыг сонговол тухайн адуу тэр сүргийн азарга болно)</summary>
-        <form onSubmit={createHerd} style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+        <form onSubmit={createHerd} className="inline-form">
           <input placeholder="Сүргийн нэр" value={herdForm.name} onChange={e=>setHerdForm(f=>({...f, name:e.target.value}))}/>
           <select value={herdForm.stallion} onChange={e=>setHerdForm(f=>({...f, stallion:e.target.value}))}>
             <option value="">Азарга (сонгох)</option>
@@ -206,15 +206,19 @@ export default function App() {
         </form>
       </details>
 
-      <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div className="split-grid">
         <div>
           <b>Сүргүүд</b>
-          <ul style={{ marginTop: 8 }}>
+          <ul className="herd-list">
             {herds.map(h => (
-              <li key={h._id} style={{ cursor: "pointer", padding: "4px 0" }}>
-                <a onClick={() => { setActiveHerd(h._id); setHerdSearch(""); loadHerdHorses(h._id, 1, ""); }}>
+              <li key={h._id} className="herd-list-item">
+                <button
+                  type="button"
+                  className="herd-list-button"
+                  onClick={() => { setActiveHerd(h._id); setHerdSearch(""); loadHerdHorses(h._id, 1, ""); }}
+                >
                   {h.name} — гишүүд: {h.membersCount} {h.stallion ? ` | азарга: ${h.stallion.horseId}${h.stallion.name?` (${h.stallion.name})`:""}` : ""}
-                </a>
+                </button>
               </li>
             ))}
             {herds.length === 0 && <i>Сүрэг алга</i>}
@@ -225,12 +229,12 @@ export default function App() {
           <b>Сонгосон сүргийн адуунууд</b>
           {activeHerd ? (
             <>
-              <form onSubmit={(e)=>{e.preventDefault(); loadHerdHorses(activeHerd, 1, herdSearch);}} style={{ display:"flex", gap:8, margin:"8px 0" }}>
-                <input value={herdSearch} onChange={e=>setHerdSearch(e.target.value)} placeholder="Сүрэг дотор: ямар ч мэдээллээр хайх"/>
+              <form onSubmit={(e)=>{e.preventDefault(); loadHerdHorses(activeHerd, 1, herdSearch);}} className="search-form herd-search-form">
+                <input className="input-grow" value={herdSearch} onChange={e=>setHerdSearch(e.target.value)} placeholder="Сүрэг дотор: ямар ч мэдээллээр хайх"/>
                 <button type="submit">Хайх</button>
               </form>
 
-              <table width="100%" border="1" cellPadding="6" style={{ borderCollapse: "collapse" }}>
+              <table className="data-table">
                 <thead>
                   <tr>
                     <th>Дугаар</th><th>Нэр</th><th>Төрсөн он</th><th>Зүс</th><th>Эзэмшигч</th><th>Эцэг</th><th>Эх</th>
@@ -248,17 +252,17 @@ export default function App() {
                       <td>{h.dam ? (h.dam.horseId + (h.dam.name ? ` (${h.dam.name})` : "")) : "-"}</td>
                     </tr>
                   ))}
-                  {herdHorses.length === 0 && <tr><td colSpan="7" style={{ textAlign:"center" }}>Мэдээлэл алга</td></tr>}
+                  {herdHorses.length === 0 && <tr><td colSpan="7" className="empty-cell">Мэдээлэл алга</td></tr>}
                 </tbody>
               </table>
 
-              <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
+              <div className="pagination">
                 <button disabled={herdPage<=1} onClick={()=>loadHerdHorses(activeHerd, herdPage-1, herdSearch)}>Өмнөх</button>
                 <span>{herdPage} / {herdPages}</span>
                 <button disabled={herdPage>=herdPages} onClick={()=>loadHerdHorses(activeHerd, herdPage+1, herdSearch)}>Дараах</button>
               </div>
             </>
-          ) : <div style={{ marginTop: 8 }}>Зүүн талаас сүрэг сонгоно уу.</div>}
+          ) : <div className="empty-state">Зүүн талаас сүрэг сонгоно уу.</div>}
         </div>
       </div>
     </div>
