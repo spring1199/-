@@ -116,44 +116,44 @@ export default function App() {
     <div style={{ maxWidth: 1100, margin: "20px auto", padding: 16 }}>
       <h1>Адууны бүртгэлийн апп</h1>
 
-      <form onSubmit={searchAll} style={{ margin: "12px 0", display: "flex", gap: 8 }}>
+      <form onSubmit={searchAll} className="form-row">
         <input
+          className="input"
           value={q}
           onChange={e=>setQ(e.target.value)}
           placeholder="Хайх: дугаар, нэр, эзэмшигч, зүс, угшил, тамга, СҮРГИЙН НЭР..."
-          style={{ flex: 1 }}
         />
-        <button type="submit">Хайх</button>
+        <button type="submit" className="btn">Хайх</button>
       </form>
 
       <details open style={{ marginBottom: 16 }}>
         <summary><b>Шинэ адуу нэмэх</b></summary>
-        <form onSubmit={createHorse} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
-          <input required placeholder="Адууны дугаар (давтагдашгүй)" value={form.horseId} onChange={e=>setForm(f=>({...f, horseId:e.target.value}))}/>
-          <input placeholder="Нэр" value={form.name} onChange={e=>setForm(f=>({...f, name:e.target.value}))}/>
-          <input placeholder="Төрсөн он" type="number" value={form.birthYear} onChange={e=>setForm(f=>({...f, birthYear:e.target.value}))}/>
-          <input placeholder="Зүс" value={form.color} onChange={e=>setForm(f=>({...f, color:e.target.value}))}/>
-          <input placeholder="Эзэмшигч" value={form.owner} onChange={e=>setForm(f=>({...f, owner:e.target.value}))}/>
-          <input placeholder="Угшил" value={form.lineage} onChange={e=>setForm(f=>({...f, lineage:e.target.value}))}/>
-          <input placeholder="Тамга" value={form.brandMark} onChange={e=>setForm(f=>({...f, brandMark:e.target.value}))}/>
+        <form onSubmit={createHorse} className="form-grid">
+          <input className="input" required placeholder="Адууны дугаар (давтагдашгүй)" value={form.horseId} onChange={e=>setForm(f=>({...f, horseId:e.target.value}))}/>
+          <input className="input" placeholder="Нэр" value={form.name} onChange={e=>setForm(f=>({...f, name:e.target.value}))}/>
+          <input className="input" placeholder="Төрсөн он" type="number" value={form.birthYear} onChange={e=>setForm(f=>({...f, birthYear:e.target.value}))}/>
+          <input className="input" placeholder="Зүс" value={form.color} onChange={e=>setForm(f=>({...f, color:e.target.value}))}/>
+          <input className="input" placeholder="Эзэмшигч" value={form.owner} onChange={e=>setForm(f=>({...f, owner:e.target.value}))}/>
+          <input className="input" placeholder="Угшил" value={form.lineage} onChange={e=>setForm(f=>({...f, lineage:e.target.value}))}/>
+          <input className="input" placeholder="Тамга" value={form.brandMark} onChange={e=>setForm(f=>({...f, brandMark:e.target.value}))}/>
 
-          <select value={form.sire} onChange={e=>setForm(f=>({...f, sire:e.target.value}))}>
+          <select className="input" value={form.sire} onChange={e=>setForm(f=>({...f, sire:e.target.value}))}>
             <option value="">Эцэг (сонгох)</option>
             {horseOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
-          <select value={form.dam} onChange={e=>setForm(f=>({...f, dam:e.target.value}))}>
+          <select className="input" value={form.dam} onChange={e=>setForm(f=>({...f, dam:e.target.value}))}>
             <option value="">Эх (сонгох)</option>
             {horseOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
 
-          <select value={form.herd} onChange={e=>setForm(f=>({...f, herd:e.target.value}))}>
+          <select className="input" value={form.herd} onChange={e=>setForm(f=>({...f, herd:e.target.value}))}>
             <option value="">Сүрэг (сонгох)</option>
             {herdOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
 
-          <div style={{ gridColumn: "1 / -1", display: "flex", gap: 8 }}>
-            <button type="submit">Нэмэх</button>
-            <button type="button" onClick={resetForm}>Цэвэрлэх</button>
+          <div className="button-group">
+            <button type="submit" className="btn">Нэмэх</button>
+            <button type="button" className="btn btn-secondary" onClick={resetForm}>Цэвэрлэх</button>
           </div>
         </form>
       </details>
@@ -178,17 +178,17 @@ export default function App() {
               <td>{h.sire ? (h.sire.horseId + (h.sire.name ? ` (${h.sire.name})` : "")) : "-"}</td>
               <td>{h.dam ? (h.dam.horseId + (h.dam.name ? ` (${h.dam.name})` : "")) : "-"}</td>
               <td>{h.herd ? (h.herd.name) : "-"}</td>
-              <td><button onClick={()=>removeHorse(h._id)}>Устгах</button></td>
+              <td><button className="btn btn-secondary" onClick={()=>removeHorse(h._id)}>Устгах</button></td>
             </tr>
           ))}
           {horses.length === 0 && <tr><td colSpan="11" style={{ textAlign:"center" }}>Мэдээлэл алга</td></tr>}
         </tbody>
       </table>
 
-      <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
-        <button disabled={page<=1} onClick={()=>loadHorses(page-1, q)}>Өмнөх</button>
+      <div className="button-group">
+        <button className="btn btn-secondary" disabled={page<=1} onClick={()=>loadHorses(page-1, q)}>Өмнөх</button>
         <span>{page} / {pages}</span>
-        <button disabled={page>=pages} onClick={()=>loadHorses(page+1, q)}>Дараах</button>
+        <button className="btn btn-secondary" disabled={page>=pages} onClick={()=>loadHorses(page+1, q)}>Дараах</button>
       </div>
 
       <hr style={{ margin: "20px 0" }}/>
@@ -196,25 +196,29 @@ export default function App() {
 
       <details open>
         <summary><b>Сүрэг үүсгэх</b> (азаргыг сонговол тухайн адуу тэр сүргийн азарга болно)</summary>
-        <form onSubmit={createHerd} style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
-          <input placeholder="Сүргийн нэр" value={herdForm.name} onChange={e=>setHerdForm(f=>({...f, name:e.target.value}))}/>
-          <select value={herdForm.stallion} onChange={e=>setHerdForm(f=>({...f, stallion:e.target.value}))}>
+        <form onSubmit={createHerd} className="form-row">
+          <input className="input" placeholder="Сүргийн нэр" value={herdForm.name} onChange={e=>setHerdForm(f=>({...f, name:e.target.value}))}/>
+          <select className="input" value={herdForm.stallion} onChange={e=>setHerdForm(f=>({...f, stallion:e.target.value}))}>
             <option value="">Азарга (сонгох)</option>
             {stallionOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
-          <button type="submit">Үүсгэх</button>
+          <button type="submit" className="btn">Үүсгэх</button>
         </form>
       </details>
 
       <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div>
           <b>Сүргүүд</b>
-          <ul style={{ marginTop: 8 }}>
+          <ul className="herd-list">
             {herds.map(h => (
-              <li key={h._id} style={{ cursor: "pointer", padding: "4px 0" }}>
-                <a onClick={() => { setActiveHerd(h._id); setHerdSearch(""); loadHerdHorses(h._id, 1, ""); }}>
+              <li key={h._id}>
+                <button
+                  type="button"
+                  className={`btn btn-secondary herd-item${activeHerd === h._id ? " is-active" : ""}`}
+                  onClick={() => { setActiveHerd(h._id); setHerdSearch(""); loadHerdHorses(h._id, 1, ""); }}
+                >
                   {h.name} — гишүүд: {h.membersCount} {h.stallion ? ` | азарга: ${h.stallion.horseId}${h.stallion.name?` (${h.stallion.name})`:""}` : ""}
-                </a>
+                </button>
               </li>
             ))}
             {herds.length === 0 && <i>Сүрэг алга</i>}
@@ -225,9 +229,9 @@ export default function App() {
           <b>Сонгосон сүргийн адуунууд</b>
           {activeHerd ? (
             <>
-              <form onSubmit={(e)=>{e.preventDefault(); loadHerdHorses(activeHerd, 1, herdSearch);}} style={{ display:"flex", gap:8, margin:"8px 0" }}>
-                <input value={herdSearch} onChange={e=>setHerdSearch(e.target.value)} placeholder="Сүрэг дотор: ямар ч мэдээллээр хайх"/>
-                <button type="submit">Хайх</button>
+              <form onSubmit={(e)=>{e.preventDefault(); loadHerdHorses(activeHerd, 1, herdSearch);}} className="form-row">
+                <input className="input" value={herdSearch} onChange={e=>setHerdSearch(e.target.value)} placeholder="Сүрэг дотор: ямар ч мэдээллээр хайх"/>
+                <button type="submit" className="btn">Хайх</button>
               </form>
 
               <table width="100%" border="1" cellPadding="6" style={{ borderCollapse: "collapse" }}>
@@ -252,10 +256,10 @@ export default function App() {
                 </tbody>
               </table>
 
-              <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
-                <button disabled={herdPage<=1} onClick={()=>loadHerdHorses(activeHerd, herdPage-1, herdSearch)}>Өмнөх</button>
+              <div className="button-group">
+                <button className="btn btn-secondary" disabled={herdPage<=1} onClick={()=>loadHerdHorses(activeHerd, herdPage-1, herdSearch)}>Өмнөх</button>
                 <span>{herdPage} / {herdPages}</span>
-                <button disabled={herdPage>=herdPages} onClick={()=>loadHerdHorses(activeHerd, herdPage+1, herdSearch)}>Дараах</button>
+                <button className="btn btn-secondary" disabled={herdPage>=herdPages} onClick={()=>loadHerdHorses(activeHerd, herdPage+1, herdSearch)}>Дараах</button>
               </div>
             </>
           ) : <div style={{ marginTop: 8 }}>Зүүн талаас сүрэг сонгоно уу.</div>}
