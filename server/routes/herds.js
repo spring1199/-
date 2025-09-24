@@ -1,6 +1,7 @@
 import express from "express";
 import Herd from "../models/Herd.js";
 import Horse from "../models/Horse.js";
+import { authorize } from "../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -64,7 +65,7 @@ router.get("/:herdId/horses", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authorize("admin"), async (req, res) => {
   try {
     const created = await Herd.create({ name: req.body.name, stallion: req.body.stallion || null });
     res.status(201).json(created);
@@ -74,7 +75,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authorize("admin"), async (req, res) => {
   try {
     const updated = await Herd.findByIdAndUpdate(
       req.params.id,
@@ -88,7 +89,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authorize("admin"), async (req, res) => {
   try {
     const id = req.params.id;
     await Horse.updateMany({ herd: id }, { $set: { herd: null } });
