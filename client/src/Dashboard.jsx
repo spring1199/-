@@ -206,10 +206,7 @@ export default function Dashboard({ user, onLogout }) {
         <nav className="sidebar__nav">
           <span className="nav-label">Глобал</span>
           <button type="button" className="nav-item active">Дашбоард</button>
-          <button type="button" className="nav-item">Давтан сургалт</button>
-          <button type="button" className="nav-item">Тайлан</button>
           <span className="nav-label">Менежмент</span>
-          <button type="button" className="nav-item">Хэрэглэгчид</button>
           <button type="button" className="nav-item">Тохиргоо</button>
         </nav>
         <div className="sidebar__footer">
