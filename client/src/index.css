@@ -528,6 +528,12 @@ textarea:focus {
   flex: 1 1 220px;
 }
 
+.herd-form__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .split-panels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -589,6 +595,28 @@ textarea:focus {
   color: #1f2933;
   box-shadow: 0 8px 16px rgba(148, 163, 184, 0.2);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.herd-list__item {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.herd-list__item > button {
+  flex: 1;
+}
+
+.herd-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.herd-actions .btn {
+  font-size: 12px;
+  padding: 6px 10px;
 }
 
 .herd-list li button:hover {
