@@ -6,6 +6,7 @@ const HorseSchema = new Schema(
     horseId: { type: String, required: true, unique: true, trim: true },
     name: { type: String, trim: true },
     birthYear: { type: Number, min: 1900, max: new Date().getFullYear() + 1 },
+    sex: { type: String, enum: ["male", "female"], required: true },
     color: { type: String, trim: true },
     owner: { type: String, trim: true },
     lineage: { type: String, trim: true },
