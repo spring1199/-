@@ -9,6 +9,7 @@ export default function Dashboard({ user, onLogout }) {
 
   const [herds, setHerds] = useState([]);
   const [herdForm, setHerdForm] = useState({ name: "", stallion: "" });
+  const [editingHerdId, setEditingHerdId] = useState("");
   const [activeHerd, setActiveHerd] = useState("");
   const [herdSearch, setHerdSearch] = useState("");
   const [herdPage, setHerdPage] = useState(1);
@@ -112,16 +113,52 @@ export default function Dashboard({ user, onLogout }) {
     await loadHorses(1, q);
   };
 
-  const createHerd = async (e) => {
+  const resetHerdForm = () => {
+    setHerdForm({ name: "", stallion: "" });
+    setEditingHerdId("");
+  };
+
+  const submitHerd = async (e) => {
     e.preventDefault();
     if (!isAdmin) return;
     const payload = { name: herdForm.name.trim(), stallion: herdForm.stallion || null };
     if (!payload.name) return alert("Сүргийн нэр оруулна уу.");
     try {
-      await api.post("/herds", payload);
+      if (editingHerdId) {
+        await api.put(`/herds/${editingHerdId}`, payload);
+        alert("Сүргийн мэдээллийг шинэчиллээ.");
+      } else {
+        await api.post("/herds", payload);
+        alert("Сүрэг амжилттай үүслээ.");
+      }
       await loadHerds("");
-      setHerdForm({ name: "", stallion: "" });
-      alert("Сүрэг амжилттай үүслээ.");
+      resetHerdForm();
+    } catch (err) {
+      alert(err?.response?.data?.error || "Алдаа");
+    }
+  };
+
+  const startEditHerd = (herd) => {
+    setEditingHerdId(herd._id);
+    setHerdForm({ name: herd.name, stallion: herd?.stallion?._id || "" });
+  };
+
+  const deleteHerd = async (herdId) => {
+    if (!isAdmin) return;
+    if (!confirm("Сүргийг устгах уу?")) return;
+    try {
+      await api.delete(`/herds/${herdId}`);
+      if (activeHerd === herdId) {
+        setActiveHerd("");
+        setHerdHorses([]);
+        setHerdPage(1);
+        setHerdPages(1);
+      }
+      if (editingHerdId === herdId) {
+        resetHerdForm();
+      }
+      await loadHerds("");
+      alert("Сүргийг устгалаа.");
     } catch (err) {
       alert(err?.response?.data?.error || "Алдаа");
     }
@@ -396,7 +433,7 @@ export default function Dashboard({ user, onLogout }) {
               </div>
             </header>
             {isAdmin && (
-              <form onSubmit={createHerd} className="herd-form">
+              <form onSubmit={submitHerd} className="herd-form">
                 <input
                   placeholder="Сүргийн нэр"
                   value={herdForm.name}
@@ -413,9 +450,16 @@ export default function Dashboard({ user, onLogout }) {
                     </option>
                   ))}
                 </select>
-                <button type="submit" className="btn btn-primary">
-                  Үүсгэх
-                </button>
+                <div className="herd-form__actions">
+                  <button type="submit" className="btn btn-primary">
+                    {editingHerdId ? "Шинэчлэх" : "Үүсгэх"}
+                  </button>
+                  {editingHerdId && (
+                    <button type="button" className="btn btn-ghost" onClick={resetHerdForm}>
+                      Цуцлах
+                    </button>
+                  )}
+                </div>
               </form>
             )}
 
@@ -428,23 +472,35 @@ export default function Dashboard({ user, onLogout }) {
                 <ul className="herd-list">
                   {herds.map((h) => (
                     <li key={h._id} className={activeHerd === h._id ? "active" : ""}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setActiveHerd(h._id);
-                          setHerdSearch("");
-                          loadHerdHorses(h._id, 1, "");
-                        }}
-                      >
-                        <span className="herd-name">{h.name}</span>
-                        <span className="herd-meta">Гишүүд: {h.membersCount}</span>
-                        {h.stallion ? (
-                          <span className="herd-meta">
-                            Азарга: {h.stallion.horseId}
-                            {h.stallion.name ? ` (${h.stallion.name})` : ""}
-                          </span>
-                        ) : null}
-                      </button>
+                      <div className="herd-list__item">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveHerd(h._id);
+                            setHerdSearch("");
+                            loadHerdHorses(h._id, 1, "");
+                          }}
+                        >
+                          <span className="herd-name">{h.name}</span>
+                          <span className="herd-meta">Гишүүд: {h.membersCount}</span>
+                          {h.stallion ? (
+                            <span className="herd-meta">
+                              Азарга: {h.stallion.horseId}
+                              {h.stallion.name ? ` (${h.stallion.name})` : ""}
+                            </span>
+                          ) : null}
+                        </button>
+                        {isAdmin && (
+                          <div className="herd-actions">
+                            <button type="button" className="btn btn-ghost" onClick={() => startEditHerd(h)}>
+                              Засах
+                            </button>
+                            <button type="button" className="btn btn-danger" onClick={() => deleteHerd(h._id)}>
+                              Устгах
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </li>
                   ))}
                   {herds.length === 0 && <li className="empty">Сүрэг алга</li>}
