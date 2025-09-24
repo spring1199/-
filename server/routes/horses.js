@@ -1,6 +1,7 @@
 import express from "express";
 import Horse from "../models/Horse.js";
 import Herd from "../models/Herd.js";
+import { authorize } from "../middlewares/auth.js";
 import { syncOffspring } from "../services/lineageSync.js";
 
 const router = express.Router();
@@ -55,14 +56,14 @@ router.get("/:id", async (req, res) => {
       .populate("dam", "horseId name")
       .populate("offspring", "horseId name")
       .populate("herd", "name");
-  if (!doc) return res.status(404).json({ error: "Олдсонгүй" });
+    if (!doc) return res.status(404).json({ error: "Олдсонгүй" });
     res.json(doc);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authorize("admin"), async (req, res) => {
   try {
     const payload = req.body;
     const created = await Horse.create(payload);
@@ -82,7 +83,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authorize("admin"), async (req, res) => {
   try {
     const before = await Horse.findById(req.params.id).select("sire dam");
     const updated = await Horse.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
@@ -102,7 +103,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authorize("admin"), async (req, res) => {
   try {
     const doc = await Horse.findByIdAndDelete(req.params.id);
     if (!doc) return res.status(404).json({ error: "Олдсонгүй" });
