@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "./api";
 
+const formatHorseOption = (horse) => ({
+  value: horse._id,
+  label: `${horse.horseId} — ${horse.name || ""}`.trim()
+});
+
 export default function Dashboard({ user, onLogout }) {
   const [horses, setHorses] = useState([]);
   const [q, setQ] = useState("");
@@ -172,11 +177,21 @@ export default function Dashboard({ user, onLogout }) {
     () => herds.map((h) => ({ value: h._id, label: `${h.name} — (тоо: ${h.membersCount})` })),
     [herds]
   );
-  const horseOptions = useMemo(
-    () => horses.map((h) => ({ value: h._id, label: `${h.horseId} — ${h.name || ""}`.trim() })),
+  const maleHorseOptions = useMemo(
+    () =>
+      horses
+        .filter((h) => h.sex === "male")
+        .map(formatHorseOption),
     [horses]
   );
-  const stallionOptions = horseOptions;
+  const femaleHorseOptions = useMemo(
+    () =>
+      horses
+        .filter((h) => h.sex === "female")
+        .map(formatHorseOption),
+    [horses]
+  );
+  const stallionOptions = maleHorseOptions;
 
   return (
     <div className="app-shell">
@@ -324,7 +339,7 @@ export default function Dashboard({ user, onLogout }) {
 
                 <select value={form.sire} onChange={(e) => setForm((f) => ({ ...f, sire: e.target.value }))}>
                   <option value="">Эцэг (сонгох)</option>
-                  {horseOptions.map((o) => (
+                  {maleHorseOptions.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
                     </option>
@@ -332,7 +347,7 @@ export default function Dashboard({ user, onLogout }) {
                 </select>
                 <select value={form.dam} onChange={(e) => setForm((f) => ({ ...f, dam: e.target.value }))}>
                   <option value="">Эх (сонгох)</option>
-                  {horseOptions.map((o) => (
+                  {femaleHorseOptions.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
                     </option>
