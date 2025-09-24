@@ -19,6 +19,7 @@ export default function Dashboard({ user, onLogout }) {
     horseId: "",
     name: "",
     birthYear: "",
+    sex: "",
     color: "",
     owner: "",
     lineage: "",
@@ -33,6 +34,7 @@ export default function Dashboard({ user, onLogout }) {
   const roleLabel = isAdmin ? "Админ" : "Үйлчлүүлэгч";
 
   const limit = 10;
+  const sexLabels = { male: "Эр", female: "Эм" };
 
   const loadHorses = async (p = 1, query = "", herdId = "") => {
     const { data } = await api.get("/horses", { params: { page: p, limit, q: query, herdId } });
@@ -69,6 +71,7 @@ export default function Dashboard({ user, onLogout }) {
       horseId: "",
       name: "",
       birthYear: "",
+      sex: "",
       color: "",
       owner: "",
       lineage: "",
@@ -84,6 +87,7 @@ export default function Dashboard({ user, onLogout }) {
     const payload = {
       ...form,
       birthYear: form.birthYear ? Number(form.birthYear) : undefined,
+      sex: form.sex,
       sire: form.sire || null,
       dam: form.dam || null,
       herd: form.herd || null
@@ -249,6 +253,17 @@ export default function Dashboard({ user, onLogout }) {
                   value={form.birthYear}
                   onChange={(e) => setForm((f) => ({ ...f, birthYear: e.target.value }))}
                 />
+                <select
+                  required
+                  value={form.sex}
+                  onChange={(e) => setForm((f) => ({ ...f, sex: e.target.value }))}
+                >
+                  <option value="" disabled>
+                    Хүйс (сонгох)
+                  </option>
+                  <option value="male">Эр</option>
+                  <option value="female">Эм</option>
+                </select>
                 <input
                   placeholder="Зүс"
                   value={form.color}
@@ -322,6 +337,7 @@ export default function Dashboard({ user, onLogout }) {
                     <th>Дугаар</th>
                     <th>Нэр</th>
                     <th>Төрсөн он</th>
+                    <th>Хүйс</th>
                     <th>Зүс</th>
                     <th>Эзэмшигч</th>
                     <th>Угшил</th>
@@ -338,6 +354,7 @@ export default function Dashboard({ user, onLogout }) {
                       <td>{h.horseId}</td>
                       <td>{h.name}</td>
                       <td>{h.birthYear}</td>
+                      <td>{sexLabels[h.sex] || "-"}</td>
                       <td>{h.color}</td>
                       <td>{h.owner}</td>
                       <td>{h.lineage}</td>
@@ -356,7 +373,7 @@ export default function Dashboard({ user, onLogout }) {
                   ))}
                   {horses.length === 0 && (
                     <tr>
-                      <td colSpan={isAdmin ? 11 : 10} style={{ textAlign: "center" }}>
+                      <td colSpan={isAdmin ? 12 : 11} style={{ textAlign: "center" }}>
                         Мэдээлэл алга
                       </td>
                     </tr>
@@ -482,6 +499,7 @@ export default function Dashboard({ user, onLogout }) {
                             <th>Дугаар</th>
                             <th>Нэр</th>
                             <th>Төрсөн он</th>
+                            <th>Хүйс</th>
                             <th>Зүс</th>
                             <th>Эзэмшигч</th>
                             <th>Эцэг</th>
@@ -494,6 +512,7 @@ export default function Dashboard({ user, onLogout }) {
                               <td>{h.horseId}</td>
                               <td>{h.name}</td>
                               <td>{h.birthYear}</td>
+                              <td>{sexLabels[h.sex] || "-"}</td>
                               <td>{h.color}</td>
                               <td>{h.owner}</td>
                               <td>{h.sire ? h.sire.horseId + (h.sire.name ? ` (${h.sire.name})` : "") : "-"}</td>
@@ -502,7 +521,7 @@ export default function Dashboard({ user, onLogout }) {
                           ))}
                           {herdHorses.length === 0 && (
                             <tr>
-                              <td colSpan="7" style={{ textAlign: "center" }}>
+                              <td colSpan="8" style={{ textAlign: "center" }}>
                                 Мэдээлэл алга
                               </td>
                             </tr>
